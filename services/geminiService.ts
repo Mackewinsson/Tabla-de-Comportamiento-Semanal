@@ -3,13 +3,16 @@ import { GoogleGenAI } from "@google/genai";
 import { DAYS_OF_WEEK } from "../constants";
 import type { Task } from "../types";
 
-const API_KEY = process.env.API_KEY;
+const API_KEY = process.env.API_KEY || "";
 
-if (!API_KEY) {
-  throw new Error("API_KEY environment variable not set");
+let ai: GoogleGenAI | null = null;
+if (API_KEY) {
+  try {
+    ai = new GoogleGenAI({ apiKey: API_KEY });
+  } catch (e) {
+    console.warn("Could not initialize GoogleGenAI", e);
+  }
 }
-
-const ai = new GoogleGenAI({ apiKey: API_KEY });
 
 export async function getBehaviorFeedback(name: string, scores: number[], tasks?: Task[]): Promise<string> {
   const formattedScores = DAYS_OF_WEEK.map((day, index) => {
@@ -60,6 +63,10 @@ export async function getBehaviorFeedback(name: string, scores: number[], tasks?
     4. Termine con una nota inspiradora y de apoyo para los padres de cara a la próxima semana.
     5. Mantenga un tono cálido, comprensivo y profesional, dirigiéndose directamente a los padres.
     `;
+
+  if (!ai) {
+    throw new Error("No se ha configurado la API Key de Gemini. Por favor, añádela en la configuración de Vercel.");
+  }
 
   try {
     const response = await ai.models.generateContent({
