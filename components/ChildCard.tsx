@@ -285,21 +285,21 @@ const ChildCard: React.FC<ChildCardProps> = ({
                         🍬🍭✨
                       </div>
                       
-                      <div className="flex justify-between items-center mb-2.5">
+                      <div className="flex flex-col sm:flex-row sm:justify-between items-start sm:items-center gap-3 mb-3 sm:mb-2.5">
                         <div className="flex items-center gap-2">
-                          <span className="text-4xl animate-bounce shrink-0" style={{ animationDuration: '2.5s' }}>🍭</span>
+                          <span className="text-3xl sm:text-4xl animate-bounce shrink-0" style={{ animationDuration: '2.5s' }}>🍭</span>
                           <div>
-                            <h3 className="font-bold text-slate-850 text-lg sm:text-2xl leading-tight">
+                            <h3 className="font-bold text-slate-850 text-base sm:text-2xl leading-tight">
                               Camino al Dulce Semanal de {child.name}
                             </h3>
-                            <p className="text-sm sm:text-base text-slate-400 font-medium leading-tight">
+                            <p className="text-xs sm:text-base text-slate-400 font-medium leading-tight mt-0.5">
                               ¡Consigue puntos con buena conducta (+10 pts por día) y haciendo tareas!
                             </p>
                           </div>
                         </div>
-                        <div className="text-right shrink-0">
-                          <p className="text-xs sm:text-sm font-bold text-slate-500 uppercase tracking-wider">Progreso</p>
-                          <p className="text-xl sm:text-3xl font-black text-pink-600">
+                        <div className="text-left sm:text-right shrink-0 bg-pink-50/80 sm:bg-transparent px-3 py-2 sm:p-0 rounded-xl w-full sm:w-auto border border-pink-100/50 sm:border-transparent">
+                          <p className="text-[10px] sm:text-sm font-bold text-slate-500 uppercase tracking-wider mb-0.5 sm:mb-0">Progreso</p>
+                          <p className="text-xl sm:text-3xl font-black text-pink-600 leading-none">
                             {grandTotalPoints} <span className="text-slate-400 text-sm sm:text-lg font-normal">/ {currentGoal} pts</span>
                           </p>
                         </div>
@@ -362,7 +362,7 @@ const ChildCard: React.FC<ChildCardProps> = ({
                       </div>
                       
                       {/* Interactive Calendar Row */}
-                      <div className="grid grid-cols-7 gap-2 text-center">
+                      <div className="grid grid-cols-7 gap-1 sm:gap-2 text-center">
                         {DAYS_OF_WEEK.map((day, index) => {
                           const isSelected = activeCalendarDay === index;
                           const behaviorStars = child.scores[index];
@@ -374,21 +374,21 @@ const ChildCard: React.FC<ChildCardProps> = ({
                             <button
                               key={day}
                               onClick={() => setActiveCalendarDay(index)}
-                              className={`p-2 sm:p-3 rounded-xl transition-all flex flex-col justify-between items-center border outline-none active:scale-95 ${
+                              className={`p-1.5 sm:p-3 rounded-xl transition-all flex flex-col justify-between items-center border outline-none active:scale-95 ${
                                 isSelected 
                                   ? 'bg-gradient-to-br from-sky-500 to-indigo-600 text-white border-sky-600 shadow-md ring-2 ring-sky-200' 
                                   : 'bg-slate-50 hover:bg-slate-100/80 text-slate-700 border-slate-100'
                               }`}
                             >
-                              <span className="text-sm sm:text-lg font-bold block mb-1">
+                              <span className="text-xs sm:text-lg font-bold block mb-1">
                                 {day.substring(0, 3)}
                               </span>
                               
                               {/* Small task progress indicator */}
-                              <div className="my-1.5 flex flex-col items-center">
+                              <div className="my-1 sm:my-1.5 flex flex-col items-center">
                                 {dayTasks.length > 0 ? (
                                   isPerfectDay ? (
-                                    <span className={`text-xs sm:text-sm px-2 py-0.5 rounded-md ${isSelected ? 'bg-amber-400 text-slate-900' : 'bg-green-100 text-green-700'} font-black`}>
+                                    <span className={`text-[10px] sm:text-sm px-1.5 sm:px-2 py-0.5 rounded-md ${isSelected ? 'bg-amber-400 text-slate-900' : 'bg-green-100 text-green-700'} font-black`}>
                                       ✓
                                     </span>
                                   ) : (
@@ -402,7 +402,7 @@ const ChildCard: React.FC<ChildCardProps> = ({
                               </div>
 
                               {/* Daily Conduct stars */}
-                              <div className="text-xs sm:text-base font-bold flex items-center justify-center min-h-[24px]">
+                              <div className="text-[10px] sm:text-base font-bold flex items-center justify-center min-h-[20px] sm:min-h-[24px]">
                                 {behaviorStars === 1 && (
                                   <span className={isSelected ? 'text-amber-300' : 'text-amber-500'} title="Todo hecho (1★)">🌟</span>
                                 )}
