@@ -82,7 +82,7 @@ const ChildCard: React.FC<ChildCardProps> = ({
     const [isLoading, setIsLoading] = useState(false);
     const [feedback, setFeedback] = useState<string | null>(null);
     const [isAvatarPickerOpen, setIsAvatarPickerOpen] = useState(false);
-    const [activeMode, setActiveMode] = useState<'kids' | 'parents'>('kids');
+    const [activeMode, setActiveMode] = useState<'kids' | 'summary' | 'parents'>('kids');
     const [activeCalendarDay, setActiveCalendarDay] = useState<number>(() => {
       const currentDayIndex = new Date().getDay(); // 0 is Sunday, 1 is Monday...
       return currentDayIndex === 0 ? 6 : currentDayIndex - 1; // convert to 0-Monday, 6-Sunday
@@ -228,27 +228,38 @@ const ChildCard: React.FC<ChildCardProps> = ({
 
                     <div className="flex items-center gap-2 w-full md:w-auto self-stretch md:self-auto justify-between shrink-0">
                         {/* Interactive Mode Toggle */}
-                        <div className="flex bg-slate-100 p-1 rounded-xl w-full max-w-[280px] md:w-auto select-none font-medium">
+                        <div className="flex bg-slate-100 p-1 rounded-xl w-full max-w-[340px] md:w-auto select-none font-medium overflow-x-auto">
                             <button
                                 onClick={() => setActiveMode('kids')}
-                                className={`flex-1 md:flex-none flex items-center justify-center gap-1.5 px-3.5 py-1.5 text-xs sm:text-sm rounded-lg transition-all ${
+                                className={`flex-1 md:flex-none flex items-center justify-center gap-1.5 px-3 py-1.5 text-xs sm:text-sm rounded-lg transition-all ${
                                   activeMode === 'kids' 
                                     ? 'bg-white shadow-sm text-sky-600 font-bold scale-100' 
                                     : 'text-slate-500 hover:text-slate-800'
                                 }`}
                             >
-                                <Smile className="h-4 w-4" />
+                                <Smile className="h-4 w-4 shrink-0" />
                                 <span>Niño 📅</span>
                             </button>
                             <button
+                                onClick={() => setActiveMode('summary')}
+                                className={`flex-1 md:flex-none flex items-center justify-center gap-1.5 px-3 py-1.5 text-xs sm:text-sm rounded-lg transition-all ${
+                                  activeMode === 'summary' 
+                                    ? 'bg-white shadow-sm text-amber-600 font-bold scale-100' 
+                                    : 'text-slate-500 hover:text-slate-800'
+                                }`}
+                            >
+                                <CalendarDays className="h-4 w-4 shrink-0" />
+                                <span>Resumen 📊</span>
+                            </button>
+                            <button
                                 onClick={() => setActiveMode('parents')}
-                                className={`flex-1 md:flex-none flex items-center justify-center gap-1.5 px-3.5 py-1.5 text-xs sm:text-sm rounded-lg transition-all ${
+                                className={`flex-1 md:flex-none flex items-center justify-center gap-1.5 px-3 py-1.5 text-xs sm:text-sm rounded-lg transition-all ${
                                   activeMode === 'parents' 
                                     ? 'bg-white shadow-sm text-indigo-600 font-bold' 
                                     : 'text-slate-500 hover:text-slate-800'
                                 }`}
                             >
-                                <UserCheck className="h-4 w-4" />
+                                <UserCheck className="h-4 w-4 shrink-0" />
                                 <span>Padres 👑</span>
                             </button>
                         </div>
@@ -276,28 +287,28 @@ const ChildCard: React.FC<ChildCardProps> = ({
                       
                       <div className="flex justify-between items-center mb-2.5">
                         <div className="flex items-center gap-2">
-                          <span className="text-2xl animate-bounce shrink-0" style={{ animationDuration: '2.5s' }}>🍭</span>
+                          <span className="text-4xl animate-bounce shrink-0" style={{ animationDuration: '2.5s' }}>🍭</span>
                           <div>
-                            <h3 className="font-bold text-slate-850 text-sm sm:text-base leading-tight">
+                            <h3 className="font-bold text-slate-850 text-lg sm:text-2xl leading-tight">
                               Camino al Dulce Semanal de {child.name}
                             </h3>
-                            <p className="text-[11px] text-slate-400 font-medium leading-tight">
+                            <p className="text-sm sm:text-base text-slate-400 font-medium leading-tight">
                               ¡Consigue puntos con buena conducta (+10 pts por día) y haciendo tareas!
                             </p>
                           </div>
                         </div>
                         <div className="text-right shrink-0">
-                          <p className="text-[10px] font-bold text-slate-500 uppercase tracking-wider">Progreso</p>
-                          <p className="text-sm font-black text-pink-600">
-                            {grandTotalPoints} <span className="text-slate-400 text-xs font-normal">/ {currentGoal} pts</span>
+                          <p className="text-xs sm:text-sm font-bold text-slate-500 uppercase tracking-wider">Progreso</p>
+                          <p className="text-xl sm:text-3xl font-black text-pink-600">
+                            {grandTotalPoints} <span className="text-slate-400 text-sm sm:text-lg font-normal">/ {currentGoal} pts</span>
                           </p>
                         </div>
                       </div>
 
                       {/* Progress bar line with custom sliding candy */}
-                      <div className="relative mt-4 mb-3">
+                      <div className="relative mt-5 mb-5">
                         {/* Background track */}
-                        <div className="h-4 bg-slate-100 rounded-full w-full overflow-hidden border border-slate-200/50 relative">
+                        <div className="h-8 sm:h-12 bg-slate-100 rounded-full w-full overflow-hidden border-2 border-slate-200 relative">
                           {/* Colored filled progress */}
                           <div 
                             className="h-full bg-gradient-to-r from-pink-400 via-amber-400 to-purple-500 rounded-full transition-all duration-700 ease-out"
@@ -307,19 +318,19 @@ const ChildCard: React.FC<ChildCardProps> = ({
 
                         {/* Sliding candy icon */}
                         <div 
-                          className="absolute -top-3 transition-all duration-700 ease-out select-none pointer-events-none"
+                          className="absolute top-1/2 -translate-y-1/2 transition-all duration-700 ease-out select-none pointer-events-none flex items-center justify-center"
                           style={{ 
-                            left: `calc(${progressPercent}% - 14px)`,
+                            left: `calc(${progressPercent}% - 20px)`,
                             filter: isGoalReached ? 'drop-shadow(0 0 10px rgba(236, 72, 153, 0.7))' : 'none'
                           }}
                         >
-                          <span className={`text-2xl block transition-transform`} title="¡Tu dulce!">
+                          <span className={`text-4xl sm:text-5xl block transition-transform`} title="¡Tu dulce!">
                             🍬
                           </span>
                         </div>
                       </div>
 
-                      <div className="flex items-center justify-between text-xs mt-2 font-bold">
+                      <div className="flex items-center justify-between text-base sm:text-lg mt-2 font-bold">
                         <span className="text-pink-500">{progressPercent}% completado</span>
                         <span className="text-slate-400">Premio: ¡Un dulce especial! 🍬</span>
                       </div>
@@ -329,18 +340,18 @@ const ChildCard: React.FC<ChildCardProps> = ({
                         <div className="mt-4 bg-pink-100/90 border border-pink-200 p-3 rounded-xl flex items-center gap-3 animate-pulse shadow-xs">
                           <span className="text-3xl animate-bounce animate-duration-1000">🎉</span>
                           <div className="flex-1 min-w-0">
-                            <p className="font-extrabold text-pink-700 text-xs sm:text-sm">
+                            <p className="font-extrabold text-pink-700 text-lg sm:text-xl">
                               ¡SÚPER FELICIDADES! 🎉 ¡META ALCANZADA!
                             </p>
-                            <p className="text-[11px] text-pink-600 font-semibold mt-0.5 leading-snug">
+                            <p className="text-sm sm:text-base text-pink-600 font-semibold mt-0.5 leading-snug">
                               ¡Has ganado tu dulce semanal! ¡Buen trabajo! 🍬🍭🍩💖
                             </p>
                           </div>
                         </div>
                       ) : (
-                        <div className="mt-3 bg-slate-50 border border-slate-100 rounded-xl p-2.5 flex items-center justify-between text-[11px] text-slate-500 font-semibold">
-                          <span>🎯 Faltan <strong className="text-indigo-600 font-black">{currentGoal - grandTotalPoints} puntos</strong> para abrir tu premio.</span>
-                          <span>¡Sigue adelante! 💪</span>
+                        <div className="mt-3 bg-slate-50 border border-slate-100 rounded-xl p-3 sm:p-4 flex flex-col sm:flex-row items-center justify-between text-base sm:text-lg text-slate-500 font-semibold gap-2 text-center sm:text-left">
+                          <span>🎯 Faltan <strong className="text-indigo-600 font-black text-lg sm:text-xl">{currentGoal - grandTotalPoints} puntos</strong> para abrir tu premio.</span>
+                          <span className="text-lg">¡Sigue adelante! 💪</span>
                         </div>
                       )}
                     </div>
@@ -363,13 +374,13 @@ const ChildCard: React.FC<ChildCardProps> = ({
                             <button
                               key={day}
                               onClick={() => setActiveCalendarDay(index)}
-                              className={`p-2 rounded-xl transition-all flex flex-col justify-between items-center border outline-none active:scale-95 ${
+                              className={`p-2 sm:p-3 rounded-xl transition-all flex flex-col justify-between items-center border outline-none active:scale-95 ${
                                 isSelected 
                                   ? 'bg-gradient-to-br from-sky-500 to-indigo-600 text-white border-sky-600 shadow-md ring-2 ring-sky-200' 
                                   : 'bg-slate-50 hover:bg-slate-100/80 text-slate-700 border-slate-100'
                               }`}
                             >
-                              <span className="text-xs font-bold block mb-1">
+                              <span className="text-sm sm:text-lg font-bold block mb-1">
                                 {day.substring(0, 3)}
                               </span>
                               
@@ -377,21 +388,21 @@ const ChildCard: React.FC<ChildCardProps> = ({
                               <div className="my-1.5 flex flex-col items-center">
                                 {dayTasks.length > 0 ? (
                                   isPerfectDay ? (
-                                    <span className={`text-[10px] px-1 rounded-md ${isSelected ? 'bg-amber-400 text-slate-900' : 'bg-green-100 text-green-700'} font-black`}>
+                                    <span className={`text-xs sm:text-sm px-2 py-0.5 rounded-md ${isSelected ? 'bg-amber-400 text-slate-900' : 'bg-green-100 text-green-700'} font-black`}>
                                       ✓
                                     </span>
                                   ) : (
-                                    <span className={`text-[9px] font-bold px-1 rounded-md ${isSelected ? 'bg-white/20 text-white' : 'bg-slate-200 text-slate-600'}`}>
+                                    <span className={`text-[10px] sm:text-xs font-bold px-1.5 py-0.5 rounded-md ${isSelected ? 'bg-white/20 text-white' : 'bg-slate-200 text-slate-600'}`}>
                                       {completedDayTasks.length}/{dayTasks.length}
                                     </span>
                                   )
                                 ) : (
-                                  <span className="text-[10px] text-slate-300">—</span>
+                                  <span className="text-xs sm:text-sm text-slate-300">—</span>
                                 )}
                               </div>
 
                               {/* Daily Conduct stars */}
-                              <div className="text-[10px] font-bold flex items-center justify-center min-h-[16px] xl:text-[11px]">
+                              <div className="text-xs sm:text-base font-bold flex items-center justify-center min-h-[24px]">
                                 {behaviorStars === 1 && (
                                   <span className={isSelected ? 'text-amber-300' : 'text-amber-500'} title="Todo hecho (1★)">🌟</span>
                                 )}
@@ -457,17 +468,17 @@ const ChildCard: React.FC<ChildCardProps> = ({
 
                       {/* Tareas del día */}
                       <div>
-                        <h4 className="text-sm font-bold text-slate-600 mb-3 flex items-center gap-1.5">
-                          <Clock className="h-4 w-4 text-sky-500" />
+                        <h4 className="text-lg sm:text-xl font-bold text-slate-600 mb-4 flex items-center gap-2">
+                          <Clock className="h-6 w-6 text-sky-500" />
                           <span>Mis Tareas Clave (Toca para marcar como hecha):</span>
                         </h4>
 
                         {tasksForActiveDay.length === 0 ? (
                           <div className="text-center py-8 bg-white border border-slate-100 rounded-xl">
-                            <p className="text-slate-400 text-sm">🎉 ¡No hay tareas asignadas para este día! ¡Disfruta!</p>
+                            <p className="text-slate-500 text-base sm:text-lg">🎉 ¡No hay tareas asignadas para este día! ¡Disfruta!</p>
                           </div>
                         ) : (
-                          <div className="space-y-2.5">
+                          <div className="space-y-3">
                             {tasksForActiveDay.map((task) => {
                               const isCompletedOnActiveDay = !!task.completed[activeCalendarDay];
 
@@ -475,25 +486,25 @@ const ChildCard: React.FC<ChildCardProps> = ({
                                 <button
                                   key={task.id}
                                   onClick={() => handleToggleChildTaskCompleted(task.id, activeCalendarDay, isCompletedOnActiveDay)}
-                                  className={`w-full text-left p-3.5 rounded-xl border transition-all flex items-center justify-between gap-3 transform active:scale-99 outline-none focus:ring-2 focus:ring-sky-100 ${
+                                  className={`w-full text-left p-4 sm:p-5 rounded-2xl border-2 transition-all flex items-center justify-between gap-4 transform active:scale-99 outline-none focus:ring-4 focus:ring-sky-100 ${
                                     isCompletedOnActiveDay
-                                      ? 'bg-green-50/70 border-green-200 text-green-800'
-                                      : 'bg-white hover:bg-slate-50 text-slate-700 border-slate-200'
+                                      ? 'bg-green-50/90 border-green-300 text-green-800 shadow-sm'
+                                      : 'bg-white hover:bg-slate-50 text-slate-700 border-slate-200 shadow-sm'
                                   }`}
                                 >
-                                  <div className="flex items-center gap-3">
-                                    <div className={`p-1.5 rounded-full border transition-all shrink-0 ${
+                                  <div className="flex items-center gap-4">
+                                    <div className={`p-2 rounded-full border-2 transition-all shrink-0 ${
                                       isCompletedOnActiveDay 
                                         ? 'bg-green-500 border-green-600 text-white animate-bounce' 
                                         : 'bg-slate-50 border-slate-300 text-slate-300'
                                     }`}>
-                                      <Check className="h-4 w-4 stroke-[3]" />
+                                      <Check className="h-6 w-6 stroke-[3]" />
                                     </div>
-                                    <span className={`font-bold text-sm sm:text-base ${isCompletedOnActiveDay ? 'line-through text-green-600/70' : ''}`}>
+                                    <span className={`font-bold text-lg sm:text-2xl ${isCompletedOnActiveDay ? 'line-through text-green-600/70' : ''}`}>
                                       {task.title}
                                     </span>
                                   </div>
-                                  <span className={`text-[11px] sm:text-xs font-black px-2.5 py-1 rounded-full whitespace-nowrap shrink-0 border ${
+                                  <span className={`text-sm sm:text-lg font-black px-4 py-2 rounded-full whitespace-nowrap shrink-0 border-2 ${
                                     isCompletedOnActiveDay
                                       ? 'bg-green-100 border-green-200 text-green-700'
                                       : 'bg-sky-50 border-sky-100 text-sky-700'
@@ -532,50 +543,107 @@ const ChildCard: React.FC<ChildCardProps> = ({
                   </div>
                 )}
 
+                {/* MODE 3: SUMMARY VIEW (Condensed Calendar) */}
+                {activeMode === 'summary' && (
+                  <div className="mt-5 space-y-4">
+                    <div className="bg-white border border-slate-100 rounded-2xl overflow-hidden shadow-sm">
+                      <div className="bg-amber-50 px-4 py-3 border-b border-amber-100/50">
+                        <h3 className="font-bold text-amber-800 text-lg sm:text-xl flex items-center gap-2">
+                          <CalendarDays className="h-5 w-5 sm:h-6 sm:w-6 text-amber-600" />
+                          Resumen Semanal de {child.name}
+                        </h3>
+                      </div>
+                      <div className="divide-y divide-slate-100">
+                        {DAYS_OF_WEEK.map((day, index) => {
+                          const behaviorStars = child.scores[index] || 0;
+                          const dayTasks = (child.tasks || []).filter(t => t.days.includes(index));
+                          const completedDayTasks = dayTasks.filter(t => t.completed[index]);
+                          
+                          const dailyTaskPointsEarned = completedDayTasks.reduce((sum, task) => sum + task.points, 0);
+                          const totalDailyPoints = Math.max(0, dailyTaskPointsEarned + (behaviorStars * 10));
+
+                          return (
+                            <div key={day} className="p-3 sm:p-4 flex flex-col sm:flex-row sm:items-center justify-between gap-3 hover:bg-slate-50 transition-colors">
+                              <div className="flex items-center gap-3 sm:gap-4">
+                                <div className="w-10 h-10 sm:w-12 sm:h-12 rounded-full bg-slate-100 text-slate-600 flex items-center justify-center font-bold text-sm sm:text-base shrink-0 border border-slate-200">
+                                  {day.substring(0, 3)}
+                                </div>
+                                <div>
+                                  <p className="font-bold text-slate-700 text-base sm:text-lg">{day}</p>
+                                  <p className="text-xs sm:text-sm text-slate-500 font-medium">
+                                    Tareas completadas: {completedDayTasks.length} / {dayTasks.length}
+                                  </p>
+                                </div>
+                              </div>
+                              <div className="flex items-center gap-4 sm:gap-8 bg-slate-50 sm:bg-transparent p-2 sm:p-0 rounded-xl justify-center sm:justify-end">
+                                <div className="flex flex-col items-center min-w-[60px]">
+                                  <span className="text-[10px] sm:text-xs text-slate-400 font-bold uppercase tracking-wider mb-1">Conducta</span>
+                                  <div className="text-lg sm:text-2xl font-bold min-h-[28px] flex items-center justify-center">
+                                    {behaviorStars === 1 ? '🌟' : behaviorStars === 0.5 ? '🌗' : behaviorStars === -1 ? '⚠️' : <span className="text-slate-300 font-normal text-sm">—</span>}
+                                  </div>
+                                </div>
+                                <div className="w-px h-8 bg-slate-200 hidden sm:block"></div>
+                                <div className="flex flex-col items-center min-w-[60px]">
+                                  <span className="text-[10px] sm:text-xs text-slate-400 font-bold uppercase tracking-wider mb-1">Puntos</span>
+                                  <span className={`text-lg sm:text-2xl font-black ${totalDailyPoints > 0 ? 'text-green-600' : 'text-slate-400'}`}>
+                                    +{totalDailyPoints}
+                                  </span>
+                                </div>
+                              </div>
+                            </div>
+                          );
+                        })}
+                      </div>
+                    </div>
+                  </div>
+                )}
+
                 {/* MODE 2: PARENTS VIEW (Manage stars, AI generation and Assign Tasks form) */}
                 {activeMode === 'parents' && (
                   <div className="mt-5 space-y-6">
                     {/* Weekly Candy Target Configuration */}
-                    <div className="bg-gradient-to-r from-pink-500/10 to-indigo-50/50 border border-pink-100 p-4 sm:p-5 rounded-2xl shadow-xs">
-                      <div className="flex items-center gap-2 mb-3">
-                        <span className="text-xl">🍭</span>
+                    <div className="bg-white border border-slate-200 p-5 sm:p-6 rounded-2xl shadow-sm">
+                      <div className="flex items-start gap-3 mb-4 border-b border-slate-100 pb-4">
+                        <div className="bg-pink-50 p-2.5 rounded-xl text-pink-500">
+                          <Trophy className="h-6 w-6" />
+                        </div>
                         <div>
-                          <h3 className="font-bold text-slate-800 text-sm sm:text-base leading-tight">
+                          <h3 className="font-bold text-slate-800 text-lg leading-tight">
                             Meta de Dulce Semanal
                           </h3>
-                          <p className="text-[11px] text-slate-400 font-medium">
-                            Ajusta cuántos puntos necesita {child.name} esta semana para ganar su premio de dulce o recompensa especial.
+                          <p className="text-sm text-slate-500 font-medium mt-1">
+                            Ajusta los puntos que necesita {child.name} esta semana para ganar su premio.
                           </p>
                         </div>
                       </div>
 
-                      <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 bg-white p-3.5 rounded-xl border border-pink-50/50">
+                      <div className="flex flex-col lg:flex-row lg:items-center justify-between gap-5">
                         {/* Selector/Input */}
                         <div className="flex-1">
-                          <label className="block text-[10px] font-black text-slate-500 uppercase tracking-wider mb-1.5">
-                            Puntos requeridos actuales: <strong className="text-pink-600 font-black">{currentGoal} pts</strong>
+                          <label className="block text-xs font-bold text-slate-500 uppercase tracking-wider mb-2">
+                            Puntos requeridos actuales: <strong className="text-pink-600 text-sm ml-1">{currentGoal} pts</strong>
                           </label>
-                          <div className="flex flex-wrap gap-1.5">
+                          <div className="flex flex-wrap gap-2">
                             {[30, 50, 75, 100, 120].map((preset) => (
                               <button
                                 type="button"
                                 key={preset}
                                 onClick={() => onUpdatePointsGoal(child.id, preset)}
-                                className={`text-xs px-3 py-1.5 rounded-lg border font-bold transition-all ${
+                                className={`text-sm px-4 py-2 rounded-xl font-bold transition-all border-2 ${
                                   currentGoal === preset
-                                    ? 'bg-pink-600 border-pink-700 text-white shadow-xs'
-                                    : 'bg-slate-50 border-slate-200 text-slate-600 hover:bg-slate-100'
+                                    ? 'bg-pink-50 border-pink-500 text-pink-700 shadow-sm'
+                                    : 'bg-white border-slate-200 text-slate-600 hover:border-pink-200 hover:bg-pink-50/50'
                                 }`}
                               >
-                                {preset} pts {preset === 50 ? '(Normal) 🍬' : ''}
+                                {preset} pts {preset === 50 ? '🍬' : ''}
                               </button>
                             ))}
                           </div>
                         </div>
 
                         {/* Custom amount */}
-                        <div className="shrink-0 flex items-center gap-2 border-t md:border-t-0 pt-3 md:pt-0 border-slate-150-dashed">
-                          <span className="text-xs font-semibold text-slate-400">Personalizado:</span>
+                        <div className="shrink-0 flex items-center gap-3 lg:border-l lg:pl-6 border-slate-200 pt-4 lg:pt-0 border-t lg:border-t-0">
+                          <span className="text-sm font-bold text-slate-600">Personalizado:</span>
                           <input
                             type="number"
                             min="5"
@@ -585,27 +653,33 @@ const ChildCard: React.FC<ChildCardProps> = ({
                               const val = Math.max(5, Math.min(300, Number(e.target.value) || 5));
                               onUpdatePointsGoal(child.id, val);
                             }}
-                            className="bg-slate-50 border border-slate-200 text-slate-800 font-bold text-sm rounded-lg py-1.5 px-2.5 w-20 text-center focus:ring-1 focus:ring-pink-500 focus:outline-none"
+                            className="bg-white border-2 border-slate-200 text-slate-800 font-bold text-base rounded-xl py-2 px-3 w-24 text-center focus:border-pink-500 focus:ring-4 focus:ring-pink-500/20 outline-none transition-all shadow-sm"
                           />
                         </div>
                       </div>
                     </div>
                     {/* Part A: Original daily ratings grid */}
-                    <div className="bg-slate-50 border border-slate-100 p-4 rounded-2xl">
-                      <h3 className="font-bold text-slate-700 text-sm sm:text-base mb-1 flex items-center gap-1.5">
-                        <Star className="h-5 w-5 text-amber-500 fill-amber-500" />
-                        <span>Evaluar conducta o cumplimiento diario:</span>
-                      </h3>
-                      <p className="text-slate-400 text-[11px] mb-3 leading-tight pl-6">
-                        Asigna <strong className="text-amber-600">1 estrella</strong> si hizo todo, <strong className="text-yellow-600">media estrella</strong> por esfuerzo parcial, o <strong className="text-red-600">¡a mejorar! ⚠️ (Ups)</strong> si su conducta debe reforzarse.
+                    <div className="bg-white border border-slate-200 p-5 sm:p-6 rounded-2xl shadow-sm">
+                      <div className="flex items-center gap-3 mb-2">
+                        <div className="bg-amber-50 p-2.5 rounded-xl text-amber-500">
+                          <Star className="h-6 w-6 fill-amber-500" />
+                        </div>
+                        <div>
+                          <h3 className="font-bold text-slate-800 text-lg">
+                            Evaluar conducta diaria
+                          </h3>
+                        </div>
+                      </div>
+                      <p className="text-slate-500 text-sm mb-5 font-medium ml-14">
+                        Asigna <strong className="text-amber-600">1 estrella</strong> si hizo todo, <strong className="text-yellow-600">media estrella</strong> por esfuerzo parcial, o <strong className="text-red-600">¡a mejorar! ⚠️</strong> si su conducta debe reforzarse.
                       </p>
                       
                       {/* Days of week - Responsive Dual Layout */}
                       {/* Mobile View: Vertical list rows for extreme ease of tap and read */}
-                      <div className="block sm:hidden space-y-2">
+                      <div className="block sm:hidden space-y-3">
                           {DAYS_OF_WEEK.map((day, index) => (
-                              <div key={day} className="flex flex-col gap-2 bg-white p-3 rounded-xl border border-sky-100/40">
-                                  <span className="font-bold text-sky-800 text-sm pl-1">{day}</span>
+                              <div key={day} className="flex flex-col gap-2 bg-slate-50 p-4 rounded-xl border border-slate-100">
+                                  <span className="font-bold text-slate-700 text-base">{day}</span>
                                   <StarRating
                                       rating={child.scores[index]}
                                       onRate={(score) => onUpdateScore(child.id, index, score)}
@@ -616,31 +690,37 @@ const ChildCard: React.FC<ChildCardProps> = ({
                       </div>
 
                       {/* Tablet/Desktop View: Original horizontal grid */}
-                      <div className="hidden sm:grid grid-cols-1 md:grid-cols-2 lg:grid-cols-7 gap-3 text-center">
+                      <div className="hidden sm:grid grid-cols-1 md:grid-cols-2 lg:grid-cols-7 gap-4 text-center">
                           {DAYS_OF_WEEK.map((day, index) => (
-                              <div key={day} className="bg-white rounded-xl p-3 flex flex-col justify-between border border-slate-100 hover:bg-sky-50/50 transition-colors">
-                                  <p className="font-bold text-sky-800 text-xs mb-2">{day}</p>
-                                  <StarRating
-                                      rating={child.scores[index]}
-                                      onRate={(score) => onUpdateScore(child.id, index, score)}
-                                      compact={true}
-                                  />
+                              <div key={day} className="bg-slate-50 rounded-xl p-4 flex flex-col justify-between border border-slate-100 hover:border-slate-300 transition-colors shadow-sm">
+                                  <p className="font-bold text-slate-700 text-sm mb-3">{day}</p>
+                                  <div className="flex justify-center">
+                                    <StarRating
+                                        rating={child.scores[index]}
+                                        onRate={(score) => onUpdateScore(child.id, index, score)}
+                                        compact={true}
+                                    />
+                                  </div>
                               </div>
                           ))}
                       </div>
                     </div>
 
                     {/* Part B: Asignador de Tareas */}
-                    <div className="bg-indigo-50/40 border border-indigo-100/80 p-4 sm:p-5 rounded-2xl space-y-4">
-                      <div className="flex items-center gap-2 text-indigo-950 font-bold text-base border-b border-indigo-100 pb-2">
-                        <Plus className="h-5 w-5 text-indigo-600" />
-                        <span>Asignar Tarea para {child.name}</span>
+                    <div className="bg-white border border-slate-200 p-5 sm:p-6 rounded-2xl shadow-sm space-y-6">
+                      <div className="flex items-center gap-3 border-b border-slate-100 pb-4">
+                        <div className="bg-indigo-50 p-2.5 rounded-xl text-indigo-600">
+                          <Check className="h-6 w-6 stroke-[3]" />
+                        </div>
+                        <h3 className="text-slate-800 font-bold text-lg">
+                          Asignar y Gestionar Tareas de {child.name}
+                        </h3>
                       </div>
 
-                      <form onSubmit={handleParentSubmitTask} className="space-y-4">
+                      <form onSubmit={handleParentSubmitTask} className="space-y-6 bg-slate-50 p-5 rounded-2xl border border-slate-100">
                         {/* Task title entry */}
                         <div>
-                          <label className="block text-xs font-extrabold text-slate-600 mb-1.5">
+                          <label className="block text-sm font-bold text-slate-700 mb-2">
                             Escribe o selecciona una tarea sugerida:
                           </label>
                           <input
@@ -648,17 +728,17 @@ const ChildCard: React.FC<ChildCardProps> = ({
                             value={newTaskTitle}
                             onChange={(e) => setNewTaskTitle(e.target.value)}
                             placeholder="Ej. Recoger la mesa después de cenar"
-                            className="w-full p-3 bg-white border border-slate-200 rounded-xl focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 transition-all outline-none text-sm placeholder-slate-400 text-slate-850 shadow-xs"
+                            className="w-full p-3.5 bg-white border-2 border-slate-200 rounded-xl focus:border-indigo-500 focus:ring-4 focus:ring-indigo-500/20 transition-all outline-none text-base placeholder-slate-400 text-slate-800 shadow-sm"
                           />
                           
                           {/* Suggested task chips */}
-                          <div className="flex flex-wrap gap-1.5 mt-2">
+                          <div className="flex flex-wrap gap-2 mt-3">
                             {SUGGESTED_TASKS.map((chip) => (
                               <button
                                 type="button"
                                 key={chip}
                                 onClick={() => setNewTaskTitle(chip)}
-                                className="text-xs bg-white text-indigo-700 font-semibold px-2.5 py-1 rounded-full border border-indigo-100 hover:bg-indigo-50 transition-colors"
+                                className="text-sm bg-white text-slate-600 font-semibold px-3 py-1.5 rounded-full border border-slate-200 hover:border-indigo-300 hover:text-indigo-700 hover:bg-indigo-50 transition-colors shadow-sm"
                               >
                                 {chip}
                               </button>
@@ -668,37 +748,37 @@ const ChildCard: React.FC<ChildCardProps> = ({
 
                         {/* Assign Days select */}
                         <div>
-                          <span className="block text-xs font-extrabold text-slate-600 mb-1.5">
+                          <span className="block text-sm font-bold text-slate-700 mb-2">
                             Días de asignación:
                           </span>
                           
                           {/* Day selector Quick helpers */}
-                          <div className="flex flex-wrap gap-1.5 mb-2.5">
+                          <div className="flex flex-wrap gap-2 mb-3">
                             <button
                               type="button"
                               onClick={handleSelectAllDays}
-                              className="text-[10px] bg-slate-100 text-slate-600 hover:bg-slate-200 px-2 py-0.5 rounded-md font-extrabold transition-colors"
+                              className="text-xs bg-white border border-slate-200 text-slate-600 hover:bg-indigo-50 hover:text-indigo-700 hover:border-indigo-200 px-3 py-1.5 rounded-lg font-bold transition-all shadow-sm"
                             >
                               Todo la semana
                             </button>
                             <button
                               type="button"
                               onClick={handleSelectWeekdays}
-                              className="text-[10px] bg-slate-100 text-slate-600 hover:bg-slate-200 px-2 py-0.5 rounded-md font-extrabold transition-colors"
+                              className="text-xs bg-white border border-slate-200 text-slate-600 hover:bg-indigo-50 hover:text-indigo-700 hover:border-indigo-200 px-3 py-1.5 rounded-lg font-bold transition-all shadow-sm"
                             >
                               Lunes a viernes
                             </button>
                             <button
                               type="button"
                               onClick={handleSelectWeekend}
-                              className="text-[10px] bg-slate-100 text-slate-600 hover:bg-slate-200 px-2 py-0.5 rounded-md font-extrabold transition-colors"
+                              className="text-xs bg-white border border-slate-200 text-slate-600 hover:bg-indigo-50 hover:text-indigo-700 hover:border-indigo-200 px-3 py-1.5 rounded-lg font-bold transition-all shadow-sm"
                             >
                               Fin de semana
                             </button>
                           </div>
 
                           {/* Days chips row */}
-                          <div className="grid grid-cols-7 gap-1 text-center">
+                          <div className="grid grid-cols-7 gap-2 text-center">
                             {DAYS_OF_WEEK.map((day, index) => {
                               const isSelected = newTaskDays.includes(index);
                               return (
@@ -706,10 +786,10 @@ const ChildCard: React.FC<ChildCardProps> = ({
                                   type="button"
                                   key={day}
                                   onClick={() => handleToggleFormDay(index)}
-                                  className={`py-2 px-1 rounded-lg text-xs font-bold transition-all border ${
+                                  className={`py-2.5 px-1 rounded-xl text-sm font-bold transition-all border-2 ${
                                     isSelected
-                                      ? 'bg-indigo-600 border-indigo-700 text-white'
-                                      : 'bg-white border-slate-200 text-slate-500 hover:bg-slate-50'
+                                      ? 'bg-indigo-50 border-indigo-500 text-indigo-700 shadow-sm'
+                                      : 'bg-white border-slate-200 text-slate-500 hover:border-indigo-300'
                                   }`}
                                 >
                                   {day.substring(0, 3)}
@@ -719,66 +799,67 @@ const ChildCard: React.FC<ChildCardProps> = ({
                           </div>
                         </div>
 
-                        {/* Point value configuration */}
-                        <div className="flex items-center justify-between gap-4 pt-1">
-                          <div>
-                            <span className="block text-xs font-extrabold text-slate-600 mb-1">
-                              Valor de la terea (Puntos tras completarse):
+                        {/* Point value configuration & Submit */}
+                        <div className="flex flex-col sm:flex-row sm:items-end justify-between gap-5 pt-2">
+                          <div className="flex-1">
+                            <span className="block text-sm font-bold text-slate-700 mb-1">
+                              Valor de la tarea (Puntos):
                             </span>
-                            <span className="text-[11px] text-slate-400">
+                            <span className="block text-xs text-slate-500 mb-2 font-medium">
                               Asigna más puntos para tareas costosas o desafiantes.
                             </span>
+                            <select
+                              value={newTaskPoints}
+                              onChange={(e) => setNewTaskPoints(Number(e.target.value))}
+                              className="bg-white border-2 border-slate-200 text-slate-800 px-4 py-2.5 rounded-xl text-base font-bold focus:ring-4 focus:ring-indigo-500/20 focus:border-indigo-500 outline-none w-full sm:w-auto shadow-sm transition-all"
+                            >
+                              <option value="1">1 Punto</option>
+                              <option value="2">2 Puntos</option>
+                              <option value="3">3 Puntos</option>
+                              <option value="5">5 Puntos ★</option>
+                            </select>
                           </div>
                           
-                          <select
-                            value={newTaskPoints}
-                            onChange={(e) => setNewTaskPoints(Number(e.target.value))}
-                            className="bg-white border border-slate-200 text-slate-700 px-3 py-1.5 rounded-lg text-sm font-bold focus:ring-1 focus:ring-indigo-500 focus:outline-none"
+                          <button
+                            type="submit"
+                            className="w-full sm:w-auto bg-indigo-600 hover:bg-indigo-700 text-white font-bold py-3 px-6 rounded-xl text-base transition-all flex items-center justify-center gap-2 shadow-md active:scale-95"
                           >
-                            <option value="1">1 Punto</option>
-                            <option value="2">2 Puntos</option>
-                            <option value="3">3 Puntos</option>
-                            <option value="5">5 Puntos ★</option>
-                          </select>
+                            <Plus className="h-5 w-5" />
+                            <span>Asignar Tarea</span>
+                          </button>
                         </div>
-
-                        {/* Submit */}
-                        <button
-                          type="submit"
-                          className="w-full bg-indigo-600 hover:bg-indigo-700 text-white font-bold py-2.5 rounded-xl text-sm transition-colors flex items-center justify-center gap-1.5 shadow-sm"
-                        >
-                          <Plus className="h-4 w-4" />
-                          <span>Asignar Tarea Especial</span>
-                        </button>
                       </form>
 
                       {/* List of currently assigned tasks */}
-                      <div className="pt-2">
-                        <span className="block text-xs font-extrabold text-slate-500 uppercase tracking-wider mb-2">
+                      <div>
+                        <h4 className="text-sm font-bold text-slate-700 mb-3 flex items-center gap-2">
+                          <BookOpen className="h-4 w-4 text-slate-400" />
                           Tareas Asignadas Actuales:
-                        </span>
+                        </h4>
 
                         {(child.tasks || []).length === 0 ? (
-                          <p className="text-xs text-slate-400 italic pl-1">
-                            No hay tareas activas asignadas. Agrega una arriba para incentivar sus logros.
-                          </p>
+                          <div className="bg-slate-50 border border-slate-100 border-dashed rounded-xl p-6 text-center">
+                            <p className="text-sm text-slate-500 font-medium">
+                              No hay tareas activas asignadas. Agrega una arriba para incentivar sus logros.
+                            </p>
+                          </div>
                         ) : (
-                          <div className="space-y-1.5 max-h-48 overflow-y-auto">
+                          <div className="space-y-2 max-h-64 overflow-y-auto pr-2 custom-scrollbar">
                             {(child.tasks || []).map((t) => (
-                              <div key={t.id} className="bg-white px-3 py-2 rounded-xl border border-indigo-100 flex items-center justify-between gap-3 shadow-xs">
-                                <div className="text-xs">
-                                  <p className="font-bold text-slate-800">{t.title}</p>
-                                  <p className="text-[10px] text-slate-400 font-medium mt-0.5">
-                                    Días: {t.days.map(d => DAYS_OF_WEEK[d].substring(0, 3)).join(', ')} | <span className="text-indigo-600 font-bold">+{t.points} pts</span>
+                              <div key={t.id} className="bg-white px-4 py-3 rounded-xl border border-slate-200 flex items-center justify-between gap-4 shadow-sm hover:border-slate-300 transition-colors">
+                                <div className="text-sm">
+                                  <p className="font-bold text-slate-800 text-base">{t.title}</p>
+                                  <p className="text-xs text-slate-500 font-medium mt-1">
+                                    Días: {t.days.map(d => DAYS_OF_WEEK[d].substring(0, 3)).join(', ')} | <span className="text-indigo-600 font-bold bg-indigo-50 px-2 py-0.5 rounded-md ml-1">+{t.points} pts</span>
                                   </p>
                                 </div>
                                 <button
                                   type="button"
                                   onClick={() => onDeleteTask(child.id, t.id)}
-                                  className="text-slate-400 hover:text-red-500 p-1 rounded-lg hover:bg-slate-50 transition-colors"
+                                  className="text-slate-400 hover:text-red-500 hover:bg-red-50 p-2 rounded-xl transition-colors shrink-0"
                                   aria-label="Borrar tarea"
                                 >
-                                  <Trash2 className="h-3.5 w-3.5" />
+                                  <Trash2 className="h-5 w-5" />
                                 </button>
                               </div>
                             ))}
